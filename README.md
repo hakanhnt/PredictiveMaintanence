@@ -1,13 +1,13 @@
 # Turbofan Engine Predictive Maintanence
-İçindekiler
-# Veri setinin tanımı
+## İçindekiler:
+## Veri setinin tanımı
 Verilerin yüklenmesi
 pandas kütüphanesi ile verilerin dataframe'e yüklenmesi.
 Dataframe'de yer alan özellik bilgilerinin gösterilmesi.
 ## Veri temizleme işlemleri
 Boş hücrelerin temizlenmesi
 Boş hücrelerin mean ile doldurulması
-İstatistiksel veri analizi
+## İstatistiksel veri analizi
 Veri seti hakkında istatistiksel bilgiler
 Korelasyon Tablosu
 Veri görselleştirme
