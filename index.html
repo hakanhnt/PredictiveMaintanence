@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turbofan Engine Predictive Maintenance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js for visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="background-glow"></div>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="logo-area">
+                <span class="status-indicator-pulse"></span>
+                <h1>Turbofan Engine Predictive Maintenance</h1>
+            </div>
+            <div class="header-tag">Lokal İzleme & Kestirimci Bakım Modeli</div>
+        </header>
+
+        <!-- Dashboard Layout Grid -->
+        <main class="dashboard-grid">
+            <!-- Sidebar / Control Panel -->
+            <section class="card control-card">
+                <h2>Kontrol Paneli</h2>
+                <div class="form-group">
+                    <label for="unit-select">Motor Seçimi (Unit ID)</label>
+                    <select id="unit-select" class="styled-select">
+                        <option value="" disabled selected>Yükleniyor...</option>
+                    </select>
+                </div>
+
+                <div class="playback-controls" id="playback-controls" style="display: none;">
+                    <label for="cycle-slider">Zaman Döngüsü (Cycle): <span id="current-cycle-val">1</span></label>
+                    <input type="range" id="cycle-slider" min="1" max="100" value="1" class="styled-slider">
+                    
+                    <div class="playback-buttons">
+                        <button id="btn-play" class="btn btn-primary">Oynat</button>
+                        <button id="btn-pause" class="btn btn-secondary">Durdur</button>
+                    </div>
+                </div>
+
+                <div class="unit-summary-stats" id="unit-summary" style="display: none;">
+                    <h3>Motor Özeti</h3>
+                    <div class="summary-stat-row">
+                        <span>Toplam Döngü:</span>
+                        <strong id="total-cycles-val">-</strong>
+                    </div>
+                    <div class="summary-stat-row">
+                        <span>Mevcut Durum:</span>
+                        <strong id="engine-status-text">-</strong>
+                    </div>
+                </div>
+
+                <!-- Collapsible Info Section -->
+                <div class="info-section">
+                    <button id="info-toggle" class="btn btn-secondary" style="margin-top: 10px; width: 100%;">Proje Bilgisi & Metodoloji</button>
+                    <div id="info-content" class="info-content-panel" style="display: none;">
+                        <h4>NASA C-MAPSS Veri Seti</h4>
+                        <p>Her <strong>Motor (Unit)</strong>, üretim toleransı ve uçuş koşullarına göre bağımsız aşınan bir uçak motorudur.</p>
+                        <p><strong>Farklar:</strong> Motorlar farklı sürelerde arızalanır. Örneğin Motor #1 192 döngü, Motor #2 287 döngü çalışabilmiştir.</p>
+                        <p><strong>Sızıntısız Kestirim:</strong> Modelimiz motorları ezberlememek için <code>Unit</code> (Motor No) ve <code>Cycle</code> (Zaman Adımı) özniteliklerini kullanmaz. Yalnızca sensörlerdeki anlık aşınma izlerinden tahmin yapar.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main RUL Display Card -->
+            <section class="card rul-card">
+                <h2>RUL Tahmini (Kalan Kullanışlı Ömür)</h2>
+                <div class="rul-display-container">
+                    <div class="rul-metrics">
+                        <div class="metric-block predicted-rul">
+                            <span class="metric-label">Tahmin Edilen RUL</span>
+                            <span class="metric-value" id="pred-rul-val">-</span>
+                            <span class="metric-unit">döngü</span>
+                        </div>
+                        <div class="metric-divider"></div>
+                        <div class="metric-block actual-rul">
+                            <span class="metric-label">Gerçek RUL</span>
+                            <span class="metric-value" id="actual-rul-val">-</span>
+                            <span class="metric-unit">döngü</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Progress meter -->
+                    <div class="rul-progress-wrapper">
+                        <div class="rul-progress-bar">
+                            <div class="rul-progress-fill" id="rul-progress-fill"></div>
+                        </div>
+                        <div class="rul-progress-labels">
+                            <span>Kritik (0)</span>
+                            <span>Sağlıklı</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alert Message -->
+                <div class="alert-box" id="maintenance-alert">
+                    <div class="alert-icon">⚠️</div>
+                    <div class="alert-content">
+                        <h4>BAKIM ALARMI tetiklendi!</h4>
+                        <p>Motor kalan ömrü 20 döngünün altına inmiştir. Acil bakım planlanmalıdır.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chart Display -->
+            <section class="card chart-card">
+                <h2>Ömür Tahmin Trendi</h2>
+                <div class="chart-container">
+                    <canvas id="rulChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Sensor Telemetry Grid -->
+            <section class="card telemetry-card">
+                <h2>Kritik Sensör Telemetrisi</h2>
+                <div class="sensor-grid" id="sensor-grid">
+                    <!-- Dynamic Sensor Cards Will Be Inserted Here -->
+                    <div class="no-data-placeholder">Lütfen bir motor seçin.</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
